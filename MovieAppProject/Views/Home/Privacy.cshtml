@@ -1,0 +1,60 @@
+﻿@{
+    ViewData["Title"] = "Privacy Policy";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0"><i class="bi bi-shield-lock"></i> @ViewData["Title"]</h2>
+        </div>
+        <div class="card-body">
+            <div class="mb-4">
+                <h4>1. Information We Collect</h4>
+                <p>We collect information to provide better services to all our users. The types of information we collect include:</p>
+                <ul>
+                    <li><strong>Account Information:</strong> When you create an account, we collect your email address and other details you provide.</li>
+                    <li><strong>Usage Data:</strong> We collect information about how you interact with our services, including the movies you view, purchase, or add to your wishlist.</li>
+                    <li><strong>Device Information:</strong> We may collect device-specific information such as your hardware model and operating system version.</li>
+                </ul>
+            </div>
+
+            <div class="mb-4">
+                <h4>2. How We Use Information</h4>
+                <p>We use the information we collect to:</p>
+                <ul>
+                    <li>Provide, maintain, and improve our services</li>
+                    <li>Develop new features and functionality</li>
+                    <li>Personalize content and recommendations</li>
+                    <li>Process transactions and send related information</li>
+                    <li>Detect, prevent, and respond to security issues</li>
+                </ul>
+            </div>
+
+            <div class="mb-4">
+                <h4>3. Information Sharing</h4>
+                <p>We do not share personal information with companies, organizations, or individuals outside of MovieApp except in the following cases:</p>
+                <ul>
+                    <li><strong>With your consent:</strong> We'll share personal information when we have your consent.</li>
+                    <li><strong>For external processing:</strong> We provide information to our affiliates or other trusted businesses to process it for us.</li>
+                    <li><strong>For legal reasons:</strong> We'll share information if we believe it's reasonably necessary to comply with laws or protect rights.</li>
+                </ul>
+            </div>
+
+            <div class="mb-4">
+                <h4>4. Security</h4>
+                <p>We work hard to protect our users from unauthorized access to or unauthorized alteration, disclosure, or destruction of information we hold. In particular:</p>
+                <ul>
+                    <li>We encrypt many of our services using SSL</li>
+                    <li>We review our information collection, storage, and processing practices to guard against unauthorized access</li>
+                    <li>We restrict access to personal information to employees who need that information to process it</li>
+                </ul>
+            </div>
+
+            <div>
+                <h4>5. Changes to This Policy</h4>
+                <p>We may update this privacy policy from time to time. We will notify you of any changes by posting the new privacy policy on this page and updating the "last updated" date below.</p>
+                <p class="text-muted"><small>Last updated: @DateTime.Now.ToString("MMMM dd, yyyy")</small></p>
+            </div>
+        </div>
+    </div>
+</div>

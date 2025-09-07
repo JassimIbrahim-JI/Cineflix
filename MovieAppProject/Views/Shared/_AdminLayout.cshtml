@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin Panel</title>
+     <link rel="icon" type="image/png" href="~/favcine.png" />
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+      <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+</head>
+<body class="admin-layout">
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <nav id="sidebar" class="bg-dark text-white">
+            <div class="sidebar-header p-3">
+                <h3><i class="bi bi-film"></i> MovieApp Admin</h3>
+            </div>
+            <ul class="list-unstyled components">
+                <li>
+                    <a asp-controller="Admin" asp-action="Index">
+                        <i class="bi bi-speedometer2"></i> Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Home" asp-action="Index">
+                        <i class="bi bi-house-door"></i> Home
+                    </a>
+                </li>
+                <li>
+                    <a href="#movieSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                        <i class="bi bi-film"></i> Movies
+                    </a>
+                    <ul class="collapse list-unstyled" id="movieSubmenu">
+                        <li>
+                            <a asp-controller="Admin" asp-action="Create"><i class="bi bi-plus-circle"></i> Add Movie</a>
+                        </li>
+                        <li>
+                            <a asp-controller="Admin" asp-action="MovieList"><i class="bi bi-list-ul"></i> All Movies</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="#actorSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                        <i class="bi bi-mask"></i> Manage Actors
+                    </a>
+                    <ul class="collapse list-unstyled" id="actorSubmenu">
+                        <li>
+                            <a asp-controller="Admin" asp-action="CreateActor"><i class="bi bi-plus-circle"></i> Add Actor</a>
+                        </li>
+                        <li>
+                            <a asp-controller="Admin" asp-action="AllActors"><i class="bi bi-list-ul"></i> All Actors</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a asp-controller="Admin" asp-action="ManageUsers">
+                        <i class="bi bi-people"></i> Users
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Admin" asp-action="ManageReviews">
+                        <i class="bi bi-chat-square-text"></i> Reviews
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Page Content -->
+        <div id="content">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <button type="button" id="sidebarCollapse" class="btn btn-dark">
+                        <i class="bi bi-list"></i>
+                    </button>
+                    <div class="ml-auto">
+                        <partial name="_LoginPartial" />
+                    </div>
+                </div>
+            </nav>
+
+            <div class="container-fluid p-4">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+      <script src="~/js/admin.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

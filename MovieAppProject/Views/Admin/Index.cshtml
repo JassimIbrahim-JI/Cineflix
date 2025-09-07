@@ -1,0 +1,249 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Dashboard</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item active">Overview</li>
+    </ol>
+    
+    <!-- Stats Cards -->
+    <div class="row">
+        <!-- Movies Card -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total Movies
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.MovieCount</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-film fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Users Card -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Total Users
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.UserCount</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-people fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reviews Card -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Total Reviews
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.ReviewCount</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-chat-square-text fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Revenue Card -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Total Revenue
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">QAR @ViewBag.TotalRevenue</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-currency-dollar fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content Row -->
+    <div class="row">
+        <!-- Recent Movies -->
+        <div class="col-xl-6 col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Recent Movies Added</h6>
+                    <a asp-controller="Admin" asp-action="Create" class="btn btn-sm btn-primary">Add New</a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Genre</th>
+                                    <th>Price</th>
+                                    <th>Rating</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var movie in ViewBag.RecentMovies)
+                                {
+                                    <tr>
+                                        <td>@movie.Title</td>
+                                        <td>@movie.Genre</td>
+                                        <td>QAR @movie.Price</td>
+                                        <td>
+                                            @for (int i = 0; i < (int)movie.Rating; i++)
+                                            {
+                                                <i class="bi bi-star-fill text-warning"></i>
+                                            }
+                                            @for (int i = (int)movie.Rating; i < 5; i++)
+                                            {
+                                                <i class="bi bi-star text-warning"></i>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Reviews -->
+        <div class="col-xl-6 col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Recent Reviews</h6>
+                    <a asp-controller="Admin" asp-action="ManageReviews" class="btn btn-sm btn-primary">View All</a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Movie</th>
+                                    <th>User</th>
+                                    <th>Rating</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var review in ViewBag.RecentReviews)
+                                {
+                                    <tr>
+                                        <td>@review.MovieTitle</td>
+                                        <td>@review.Username</td>
+                                        <td>
+                                            @for (int i = 0; i < review.Rating; i++)
+                                            {
+                                                <i class="bi bi-star-fill text-warning"></i>
+                                            }
+                                        </td>
+                                        <td>@review.ReviewDate.ToString("MMM dd, yyyy")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Quick Actions</h6>
+                </div>
+                <div class="card-body text-center">
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <a asp-controller="Admin" asp-action="Create" class="btn btn-primary btn-icon-split">
+                                <span class="icon text-white-50">
+                                    <i class="bi bi-plus-circle"></i>
+                                </span>
+                                <span class="text">Add Movie</span>
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a asp-controller="Admin" asp-action="ManageUsers" class="btn btn-success btn-icon-split">
+                                <span class="icon text-white-50">
+                                    <i class="bi bi-people"></i>
+                                </span>
+                                <span class="text">Manage Users</span>
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a asp-controller="Admin" asp-action="ManageReviews" class="btn btn-info btn-icon-split">
+                                <span class="icon text-white-50">
+                                    <i class="bi bi-chat-square-text"></i>
+                                </span>
+                                <span class="text">Manage Reviews</span>
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="#" class="btn btn-warning btn-icon-split">
+                                <span class="icon text-white-50">
+                                    <i class="bi bi-graph-up"></i>
+                                </span>
+                                <span class="text">View Reports</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <style>
+        .card {
+            border-radius: 0.35rem;
+        }
+        .card-header {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+        }
+        .btn-icon-split {
+            padding: 0.375rem 0.75rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-icon-split .icon {
+            width: 30px;
+            display: inline-block;
+            background-color: rgba(0, 0, 0, 0.15);
+            padding: 0.375rem 0;
+            text-align: center;
+            margin-right: 0.5rem;
+        }
+        .shadow {
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
+        }
+    </style>

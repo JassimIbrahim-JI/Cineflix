@@ -1,0 +1,65 @@
+﻿@model IEnumerable<MovieAppProject.Models.Actor>
+
+@{
+    ViewData["Title"] = "All Actors";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">All Actors</h2>
+        <a asp-action="CreateActor" class="btn btn-primary">
+            <i class="fas fa-plus-circle me-1"></i> Add New Actor
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i> No actors found.
+            <a asp-action="CreateActor" class="alert-link">Create your first actor</a>.
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var actor in Model)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        @if (!string.IsNullOrEmpty(actor.ImageUrl))
+                        {
+                            <img src="@actor.ImageUrl" class="card-img-top" alt="@actor.Name" style="height: 200px; object-fit: cover;">
+                        }
+                        <div class="card-body">
+                            <h5 class="card-title">@actor.Name</h5>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    <i class="fas fa-birthday-cake me-1"></i>
+                                    Born: @actor.DateOfBirth.ToString("MMMM dd, yyyy")
+                                </small>
+                            </p>
+                            <p class="card-text">@(string.IsNullOrEmpty(actor.Bio) ? "No biography available" : actor.Bio)</p>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">ID: @actor.Id</small>
+                                <div>
+                                    <a asp-action="EditActor" asp-route-id="@actor.Id" class="btn btn-sm btn-outline-warning me-1">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form asp-action="DeleteActorConfirmed" asp-route-id="@actor.Id" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                onclick="return confirm('Are you sure you want to delete @actor.Name?');">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

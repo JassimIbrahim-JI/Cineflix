@@ -1,0 +1,72 @@
+﻿@model IEnumerable<Movie>
+@{
+    ViewData["Title"] = "All Movies";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+        <div class="d-flex justify-content-between align-items-center">
+            <h3 class="mb-0"><i class="bi bi-film"></i> Movie Management</h3>
+            <a asp-action="Create" class="btn btn-light">
+                <i class="bi bi-plus-circle"></i> Add New
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Poster</th>
+                        <th>Title</th>
+                        <th>Genre</th>
+                        <th>Release Date</th>
+                        <th>Price</th>
+                        <th>Rating</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <img src="@item.ImageUrl" alt="@item.Title" style="height:50px; width:auto; object-fit:cover" />
+                            </td>
+                            <td>@item.Title</td>
+                            <td>@item.Genre</td>
+                            <td>@item.ReleaseDate.ToString("yyyy-MM-dd")</td>
+                            <td>QAR @item.Price.ToString("0.00")</td>
+                            <td>
+                                @for (int i = 0; i < (int)item.Rating; i++)
+                                {
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                }
+                                @for (int i = (int)item.Rating; i < 5; i++)
+                                {
+                                    <i class="bi bi-star text-warning"></i>
+                                }
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </a>
+                                    <a asp-action="MovieActors" asp-route-movieId="@item.Id" class="btn btn-sm btn-info">
+                                        Manage Actors
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@{
+}

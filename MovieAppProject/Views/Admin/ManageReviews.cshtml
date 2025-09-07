@@ -1,0 +1,93 @@
+﻿@using MovieAppProject.Models.ViewModels.Reviews
+@model ReviewListViewModel
+@{
+    ViewData["Title"] = "Manage Reviews";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+        <h3 class="mb-0"><i class="bi bi-chat-square-text"></i> Review Management</h3>
+    </div>
+    <div class="card-body">
+        @if (Model.Reviews.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Movie</th>
+                            <th>User</th>
+                            <th>Rating</th>
+                            <th>Date</th>
+                            <th>Content</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var review in Model.Reviews)
+                        {
+                            <tr>
+                                <td>@review.MovieTitle</td>
+                                <td>@review.Username</td>
+                                <td>
+                                    @for (int i = 0; i < review.Rating; i++)
+                                    {
+                                        <i class="bi bi-star-fill text-warning"></i>
+                                    }
+                                    @for (int i = review.Rating; i < 5; i++)
+                                    {
+                                        <i class="bi bi-star text-warning"></i>
+                                    }
+                                </td>
+                                <td>@review.ReviewDate.ToString("g")</td>
+                                <td>@(review.Content.Length > 50 ? review.Content.Substring(0, 50) + "..." : review.Content)</td>
+                                <td>
+                                    <form asp-action="DeleteReview" method="post">
+                                        <input type="hidden" name="id" value="@review.Id" />
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    @if (Model.PageInfo.CurrentPage > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link"
+                               asp-action="ManageReviews"
+                               asp-route-page="@(Model.PageInfo.CurrentPage - 1)">Previous</a>
+                        </li>
+                    }
+
+                    @for (int i = 1; i <= Model.PageInfo.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.PageInfo.CurrentPage ? "active" : "")">
+                            <a class="page-link" asp-action="ManageReviews" asp-route-page="@i">@i</a>
+                        </li>
+                    }
+
+                    @if (Model.PageInfo.CurrentPage < Model.PageInfo.TotalPages)
+                    {
+                        <li class="page-item">
+                            <a class="page-link"
+                               asp-action="ManageReviews"
+                               asp-route-page="@(Model.PageInfo.CurrentPage + 1)">Next</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        }
+        else
+        {
+            <div class="alert alert-info">No reviews found.</div>
+        }
+    </div>
+</div>

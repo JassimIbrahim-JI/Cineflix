@@ -1,0 +1,74 @@
+﻿@page
+@using MovieAppProject.Pages.Account.Manage
+@model IndexModel
+@{
+    Layout = User.IsInRole("Admin") ? "_AdminLayout" : "_Layout";
+    ViewData["Title"] = "Profile";
+}
+
+<div class="profile-page container py-4">
+
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3">
+            <div class="profile-sidebar card">
+                <div class="card-body text-center">
+                    <div class="avatar-container mb-3">
+                        <i class="bi bi-person-circle avatar-icon"></i>
+                    </div>
+                    <h4>@Model.CurrentUser.FullName</h4>
+                    <p class="member-since">
+                        Member since @Model.CurrentUser.CreatedAt.ToString("MMMM yyyy")
+                    </p>
+                </div>
+                <partial name="_ManageNav" />
+            </div>
+        </div>
+
+        <!-- Main Details -->
+        <div class="col-lg-9">
+            <div class="profile-details card">
+                <div class="card-header">
+                    <h4><i class="bi bi-person-lines-fill me-2"></i>Account Details</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <h5>Personal Information</h5>
+                            <dl class="row">
+                                <dt class="col-sm-5">Full Name:</dt>
+                                <dd class="col-sm-7">@Model.CurrentUser.FullName</dd>
+
+                                <dt class="col-sm-5">Date of Birth:</dt>
+                                <dd class="col-sm-7">@Model.CurrentUser.DateOfBirth.ToShortDateString()</dd>
+                            </dl>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h5>Account Information</h5>
+                            <dl class="row">
+                                <dt class="col-sm-5">Email:</dt>
+                                <dd class="col-sm-7">@Model.CurrentUser.Email</dd>
+
+                                <dt class="col-sm-5">Member Since:</dt>
+                                <dd class="col-sm-7">@Model.CurrentUser.CreatedAt.ToString("MMMM dd, yyyy")</dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+
+                        <a asp-page="./ChangePassword" class="btn @(User.IsInRole("Admin") ? "btn-secondary" : "btn-change-password")">
+                              <i class="bi bi-key"></i> Change Password
+                        </a>
+                        <a asp-page="./PersonalData" class="btn btn-primary">
+                            <i class="bi bi-gear"></i> Manage Account
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="~/css/profile.css" />

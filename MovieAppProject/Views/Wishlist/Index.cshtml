@@ -1,0 +1,62 @@
+﻿@model IEnumerable<Wishlist>
+
+@{
+    ViewData["Title"] = "Your Wishlist";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4">Your Wishlist</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            Your wishlist is empty. <a asp-controller="Home" asp-action="Index" class="alert-link">Browse movies</a> to add some!
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+            @foreach (var item in Model)
+            {
+                <div class="col" data-wishlist-item-id="@item.MovieId">
+                    <div class="card h-100 movie-card">
+                        <div class="card-image-container">
+                            <img src="@item.Movie.ImageUrl" class="card-img-top" alt="@item.Movie.Title">
+                            <div class="card-badge">
+                                <span class="rating-badge">
+                                    <i class="bi bi-star-fill"></i> @item.Movie.Rating/5
+                                </span>
+                            </div>
+                            <div class="card-overlay">
+                                <div class="overlay-content d-flex flex-column gap-2">
+                                    <button type="button" data-action="wishlist" data-wishlist-action="remove" data-movie-id="@item.MovieId" class="btn btn-danger btn-sm">
+                                        <i class="bi bi-heart-fill"></i> Remove
+                                    </button>
+
+                                    <button type="button" data-action="add-to-cart" data-movie-id="@item.MovieId" class="btn btn-success btn-sm">
+                                        <i class="bi bi-cart-plus"></i> Add to Cart
+                                    </button>
+
+                                    <a asp-action="Details" asp-route-id="@item.MovieId" class="btn btn-view-details btn-sm mt-1">
+                                        Details
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Movie.Title</h5>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary">@item.Movie.Genre</span>
+                                <span class="text-muted small">@item.Movie.ReleaseDate.ToString("yyyy")</span>
+                            </div>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between align-items-center">
+                            <span class="price-tag">QAR @item.Movie.Price.ToString("0.00")</span>
+                            <small class="gap-1 text-muted small">Added on @item.AddedDate.ToString("d")</small>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

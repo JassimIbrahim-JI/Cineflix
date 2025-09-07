@@ -1,0 +1,306 @@
+﻿@model MovieAppProject.Helpers.PaginatedList<Movie>
+@{
+    ViewData["Title"] = "Premium Movie Streaming";
+}
+
+<!-- Hero Section -->
+<div class="hero-section bg-dark text-white py-5 mb-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-3">Discover Amazing Movies</h1>
+                <p class="lead mb-4">Browse our collection of premium movies and find your next favorite film.</p>
+                <div class="d-flex flex-wrap gap-2">
+                    <span class="badge bg-primary fs-6">Action</span>
+                    <span class="badge bg-success fs-6">Drama</span>
+                    <span class="badge bg-warning fs-6">Comedy</span>
+                    <span class="badge bg-info fs-6">Sci-Fi</span>
+                    <span class="badge bg-danger fs-6">Horror</span>
+                </div>
+            </div>
+            <div class="col-lg-4 d-none d-lg-block">
+                <div class="text-center">
+                    <i class="bi bi-film display-1 text-primary"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Header and Search Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 gap-2">
+                <h2 class="section-title mb-3 mb-md-0">
+                    <i class="bi bi-collection-play me-2"></i>Movie Collection
+                </h2>
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-controller="Admin" asp-action="Index" class="btn btn-primary btn-md admin-dashboard-btn">
+                        <i class="bi bi-speedometer2 me-1 me-md-2"></i>
+                        <span class="d-none d-md-inline">Dashboard</span>
+                        <span class="d-md-none">Admin</span>
+                    </a>
+                }
+            </div>
+            <div class="card search-filter-card mb-4">
+                <div class="card-body p-3">
+                    <form asp-action="Index" method="get" class="row g-2 g-md-3 align-items-center">
+                       
+                        <div class="col-12 col-md-8 position-relative">
+                            <div class="input-group search-input-group flex-nowrap">
+                                <span class="input-group-text search-icon">
+                                    <i class="bi bi-search"></i>
+                                </span>
+                                <input type="text" id="movieSearch" name="searchTerm" value="@ViewData["CurrentFilter"]"
+                                       class="form-control search-input"
+                                       placeholder="Search movies..."
+                                       autocomplete="off">
+                                <button type="submit" class="btn btn-primary search-btn">
+                                    <i class="bi bi-search d-md-none"></i>
+                                    <span class="d-none d-md-inline">Search</span>
+                                </button>
+                            </div>
+                    
+                            <ul id="searchSuggestions" class="list-group search-suggestions"></ul>
+                        </div>
+
+                        <div class="col-12 col-md-4">
+                            <div class="input-group sort-group">
+                                <span class="input-group-text sort-icon">
+                                    <i class="bi bi-sort-down"></i>
+                                </span>
+                                <select name="sortOrder" class="form-select sort-select" onchange="this.form.submit()">
+                                    <option value="">Sort By</option>
+                                    <option value="title_desc" selected='@(ViewData["CurrentSort"]?.ToString() == "title_desc")'>Title (Z-A)</option>
+                                    <option value="Date" selected='@(ViewData["CurrentSort"]?.ToString() == "Date")'>Release Date (Oldest)</option>
+                                    <option value="date_desc" selected='@(ViewData["CurrentSort"]?.ToString() == "date_desc")'>Release Date (Newest)</option>
+                                    <option value="Price" selected='@(ViewData["CurrentSort"]?.ToString() == "Price")'>Price (Low-High)</option>
+                                    <option value="price_desc" selected='@(ViewData["CurrentSort"]?.ToString() == "price_desc")'>Price (High-Low)</option>
+                                </select>
+                                <a asp-action="Index" class="btn btn-outline-secondary reset-btn">
+                                    <i class="bi bi-arrow-clockwise"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mb-5">
+        @foreach (var item in Model)
+        {
+            <div class="col">
+                <div class="card h-100 movie-card">
+                    <div class="card-image-container">
+                        <img src="@item.ImageUrl" class="card-img-top" alt="@item.Title">
+                        <div class="card-badge">
+                            <span class="rating-badge">
+                                <i class="bi bi-star-fill"></i> @item.Rating/5
+                            </span>
+                        </div>
+                        <div class="card-overlay">
+                            <div class="overlay-content">
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <button type="button" data-action="add-to-cart" data-movie-id="@item.Id" class="btn btn-primary btn-sm">
+                                        <i class="bi bi-cart-plus"></i> Add to Cart
+                                    </button>
+                                }
+                                else
+                                {
+                                    <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-primary btn-sm">
+                                        <i class="bi bi-cart-plus"></i> Add to Cart
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Title</h5>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-primary">@item.Genre</span>
+                            <span class="text-muted small">@item.ReleaseDate.ToString("yyyy")</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-white fw-bold">QAR @item.Price.ToString("0.00")</span>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-view-details">
+                                Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (Model.TotalPages > 1)
+    {
+        <nav aria-label="Movie pagination" class="mb-5">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(!Model.HasPreviousPage ? "disabled" : "")">
+                    <a class="page-link"
+                       asp-action="Index"
+                       asp-route-sortOrder="@ViewData["CurrentSort"]"
+                       asp-route-pageNumber="@(Model.PageIndex - 1)"
+                       asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                        <i class="bi bi-chevron-left"></i> Previous
+                    </a>
+                </li>
+
+                @for (var i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-route-sortOrder="@ViewData["CurrentSort"]"
+                           asp-route-pageNumber="@i"
+                           asp-route-currentFilter="@ViewData["CurrentFilter"]">@i</a>
+                    </li>
+                }
+
+                <li class="page-item @(!Model.HasNextPage ? "disabled" : "")">
+                    <a class="page-link"
+                       asp-action="Index"
+                       asp-route-sortOrder="@ViewData["CurrentSort"]"
+                       asp-route-pageNumber="@(Model.PageIndex + 1)"
+                       asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                        Next <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    }
+</div>
+
+<style>
+    .search-filter-card {
+        background: var(--dark-card);
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .search-input-group {
+        background: var(--dark-bg);
+        border-radius: 50px;
+        overflow: hidden;
+    }
+
+    .search-icon {
+        background: var(--dark-bg);
+        border-color: rgba(255,255,255,0.2);
+        color: var(--text-secondary);
+        border-right: none;
+        padding: 0.75rem 1rem;
+    }
+
+    .search-input {
+        background: var(--dark-bg);
+        color: var(--text-primary);
+        border-color: rgba(255,255,255,0.2);
+        border-left: none;
+        border-right: none;
+        padding: 0.75rem;
+    }
+
+    .search-btn {
+        background: var(--gradient-primary);
+        border: none;
+        padding: 0.75rem 1.25rem;
+        white-space: nowrap;
+    }
+
+    .sort-group {
+        border-radius: 50px;
+        overflow: hidden;
+    }
+
+    .sort-icon {
+        border-color: rgba(255,255,255,0.2);
+        color: black;
+        border-right: none;
+        padding: 0.75rem 1rem;
+    }
+
+    .sort-select {
+        background: var(--dark-bg);
+        color: var(--text-primary);
+        border-color: rgba(255,255,255,0.2);
+        border-left: none;
+        border-right: none;
+        padding: 0.75rem;
+    }
+
+    .reset-btn {
+        border-color: rgba(255,255,255,0.2);
+        color: var(--text-secondary);
+        padding: 0.75rem;
+    }
+
+    .search-suggestions {
+        position: absolute;
+        width: 100%;
+        z-index: 1060;
+        max-height: 200px;
+        overflow-y: auto;
+        background: var(--dark-card);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-top: none;
+        border-radius: 0 0 8px 8px;
+        display: none;
+    }
+
+    /* Admin Button */
+    .admin-dashboard-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+        white-space: nowrap;
+    }
+
+    @@media (max-width: 767.98px) {
+        .search-input-group {
+            margin-bottom: 0.5rem;
+        }
+
+        .search-btn {
+            padding: 0.75rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+        }
+    }
+
+    .page-link {
+        background: var(--dark-card);
+        color: var(--text-primary);
+        border-color: rgba(255,255,255,0.1);
+        margin: 0 0.2rem;
+    }
+
+    .page-item.active .page-link {
+        background: var(--gradient-primary);
+        border-color: var(--primary);
+    }
+
+    .page-link:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--text-primary);
+    }
+    .row-cols-lg-4 .col {
+        margin-bottom: 1.5rem;
+    }
+
+    .rating-badge {
+        background: rgba(0, 0, 0, 0.7);
+        color: #ffc107;
+        padding: 0.3rem 0.6rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+</style>

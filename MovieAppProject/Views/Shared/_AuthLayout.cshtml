@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CineFlix</title>
+     <link rel="icon" type="image/png" href="~/favcine.png" />
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
+</head>
+<body class="auth-body">
+    <div class="auth-wrapper">
+       
+        <div class="auth-left">
+            <div class="overlay"></div>
+            <div class="auth-brand">
+                <i class="bi bi-camera-reels"></i>
+                <h1>CineFlix</h1>
+                <p>Unlimated movies, shows, and more.</p>
+            </div>
+        </div>
+
+        <div class="auth-right">
+            <div class="auth-container">
+                @RenderBody()
+            </div>
+        </div>
+
+    </div>
+   
+ 
+    <div id="toast-container" class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100;">
+        
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/toastAuth.js" ></script>
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+        @if (TempData["DataSuccess"] != null)
+        {
+            <text>showAuthNotification('@TempData["DataSuccess"]', 'success');</text>
+        }
+
+        @if (TempData["DataError"] != null)
+        {
+            <text>showAuthNotification('@TempData["DataError"]', 'danger');</text>
+        }
+
+        @if (TempData["LoginSuccess"] != null && (bool)TempData["LoginSuccess"])
+        {
+            <text>showAuthNotification('Login successful!', 'success');</text>
+        }
+
+        @if (TempData["LoginError"] != null)
+        {
+            <text>showAuthNotification('@TempData["LoginError"]', 'danger');</text>
+        }
+
+        @if (TempData["PasswordSuccess"] != null)
+        {
+            <text>showAuthNotification('@TempData["PasswordSuccess"]', 'success');</text>
+        }
+
+        @if (TempData["PasswordError"] != null)
+        {
+            <text>showAuthNotification('@TempData["PasswordError"]', 'danger');</text>
+        }
+
+        @if (TempData["RegisterSuccess"] != null)
+        {
+            <text>showAuthNotification('@TempData["RegisterSuccess"]', 'success');</text>
+        }
+
+        @if (TempData["RegisterError"] != null)
+        {
+            <text>showAuthNotification('@TempData["RegisterError"]', 'danger');</text>
+        }
+
+     });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

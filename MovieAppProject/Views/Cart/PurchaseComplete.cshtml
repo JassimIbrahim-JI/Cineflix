@@ -1,0 +1,123 @@
+﻿@model MovieAppProject.Models.Purchase
+
+@{
+    ViewData["Title"] = "Purchase Complete";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Success Header -->
+            <div class="text-center mb-5">
+                <div class="success-icon mb-4">
+                    <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+                </div>
+                <h1 class="display-4 fw-bold text-white mb-3">Purchase Complete!</h1>
+                <p class="lead text-muted">Thank you for your purchase. Your movies are now available to watch.</p>
+                <p class="text-muted">Order #: @Model.Id</p>
+                <p class="text-muted">Date: @Model.PurchaseDate.ToString("f")</p>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="card shadow-sm mb-4" style="background: var(--dark-card); border: 1px solid rgba(255,255,255,0.1);">
+                <div class="card-header" style="background: rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.1);">
+                    <h5 class="mb-0 text-white">
+                        <i class="bi bi-receipt me-2"></i>Order Summary
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Movie</th>
+                                    <th class="text-end">Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.PurchaseItems)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <img src="@item.Movie.ImageUrl" alt="@item.Movie.Title"
+                                                     class="img-thumbnail me-3" style="width: 60px; height: 80px; object-fit: cover; border-color: rgba(255,255,255,0.2);">
+                                                <div>
+                                                    <h6 class="mb-1">@item.Movie.Title</h6>
+                                                    <small class="text-muted">@item.Movie.Genre</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle text-end text-white">
+                                            QAR @item.PriceAtPurchase.ToString("0.00")
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td class="fw-bold">Total Amount:</td>
+                                    <td class="fw-bold text-end text-success">QAR @Model.TotalAmount.ToString("0.00")</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                <a asp-controller="Home" asp-action="NewAndPopular" class="btn btn-primary btn-lg me-md-3">
+                    <i class="bi bi-film me-2"></i>Browse More Movies
+                </a>
+                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary btn-lg">
+                    <i class="bi bi-house me-2"></i>Back to Home
+                </a>
+            </div>
+
+            <div class="alert alert-info mt-5">
+                <div class="d-flex">
+                    <i class="bi bi-info-circle-fill me-3"></i>
+                    <div>
+                        <h5 class="alert-heading" >What's Next?</h5>
+                        <p class="mb-1">• Your purchased movies are now available in your library</p>
+                        <p class="mb-1">• You can watch them anytime from the "My Movies" section</p>
+                        <p class="mb-0">• A confirmation email has been sent to your registered email address</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .success-icon {
+        animation: scaleUp 0.5s ease-in-out;
+    }
+
+    @@keyframes scaleUp {
+        0% {
+            transform: scale(0);
+            opacity: 0;
+        }
+        50% {
+            transform: scale(1.2);
+        }
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    .btn-outline-secondary {
+        background: transparent;
+        border: 2px solid var(--text-secondary);
+        color: var(--text-secondary);
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-secondary:hover {
+        background: rgba(163, 163, 163, 0.1);
+        border-color: var(--text-primary);
+        color: var(--text-primary);
+    }
+</style>

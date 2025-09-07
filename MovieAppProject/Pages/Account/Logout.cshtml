@@ -1,0 +1,51 @@
+﻿@page
+@model MovieAppProject.Pages.Account.LogoutModel
+@{
+    ViewData["Title"] = "Logout";
+    Layout = "_AuthLayout";
+}
+
+<div class="auth-card text-center">
+    <div class="auth-logo mb-4">
+        <i class="bi bi-film fs-1 text-primary"></i>
+        <h1 class="h3 mb-3 fw-normal">Logout</h1>
+    </div>
+
+    <p class="mb-4 text-muted">Are you sure you want to logout?</p>
+
+    <form method="post" class="d-flex flex-column gap-2">
+        <button type="submit" class="w-100 btn btn-lg btn-danger">
+            <i class="bi bi-box-arrow-right me-2"></i>Yes, Logout
+        </button>
+        <a href="/" class="w-100 btn btn-lg btn-outline-secondary">
+            <i class="bi bi-x-circle me-2"></i>Cancel
+        </a>
+    </form>
+</div>
+
+<style>
+    .btn-outline-secondary {
+        background: transparent;
+        border: 2px solid var(--text-secondary);
+        color: var(--text-secondary);
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-secondary:hover {
+        background: rgba(163, 163, 163, 0.1);
+        border-color: var(--text-primary);
+        color: var(--text-primary);
+        transform: translateY(-2px);
+    }
+
+    .btn-danger {
+        background: var(--gradient-primary);
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(229, 9, 20, 0.6);
+    }
+</style>

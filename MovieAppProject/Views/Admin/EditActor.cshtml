@@ -1,0 +1,86 @@
+﻿@model MovieAppProject.Models.ViewModels.Movies.MovieActorViewModel
+
+@{
+    ViewData["Title"] = "Edit Actor";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-warning text-dark py-3">
+                    <h3 class="card-title mb-0">
+                        <i class="fas fa-user-edit me-2"></i>Edit Actor
+                    </h3>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="EditActor" method="post" id="editActorForm">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="Id" />
+                        <div asp-validation-summary="All" class="alert alert-danger"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label fw-bold">
+                                <i class="fas fa-user me-1"></i>Full Name
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-signature"></i></span>
+                                <input asp-for="Name" class="form-control" placeholder="Enter actor's full name" />
+                            </div>
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Birthday" class="form-label fw-bold">
+                                <i class="fas fa-birthday-cake me-1"></i>Date of Birth
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                                <input asp-for="Birthday" type="date" class="form-control" />
+                            </div>
+                            <span asp-validation-for="Birthday" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ImageUrl" class="form-label fw-bold">
+                                <i class="fas fa-image me-1"></i>Profile Image URL
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-link"></i></span>
+                                <input asp-for="ImageUrl" class="form-control" placeholder="https://example.com/actor-image.jpg" />
+                            </div>
+                            <span asp-validation-for="ImageUrl" class="text-danger small"></span>
+                            <div class="mt-2">
+                                <img id="imagePreview" src="@Model.ImageUrl" alt="Image preview"
+                                     class="img-thumbnail @(string.IsNullOrEmpty(Model.ImageUrl) ? "d-none" : "")"
+                                     style="max-height: 150px; max-width: 150px;" />
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Bio" class="form-label fw-bold">
+                                <i class="fas fa-file-alt me-1"></i>Biography
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-align-left"></i></span>
+                                <textarea asp-for="Bio" class="form-control" rows="4"
+                                          placeholder="Brief biography about the actor"></textarea>
+                            </div>
+                            <span asp-validation-for="Bio" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="AllActors" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-1"></i> Back to Actors
+                            </a>
+                            <button type="submit" class="btn btn-warning text-dark">
+                                <i class="fas fa-save me-1"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

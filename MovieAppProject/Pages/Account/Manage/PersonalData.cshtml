@@ -1,0 +1,98 @@
+﻿@page
+@using MovieAppProject.Pages.Account.Manage
+@model PersonalDataModel
+@{
+    Layout = User.IsInRole("Admin") ? "_AdminLayout" : "_Layout";
+    ViewData["Title"] = "Manage Account";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Header Card -->
+            <div class="card profile-header-card shadow-sm mb-4">
+                <div class="card-body text-center py-4">
+                    <div class="profile-avatar mb-2">
+                        <i class="bi bi-person-circle display-5 text-white"></i>
+                    </div>
+                    <h2 class="card-title fw-bold">Account Settings</h2>
+                    <p class="text-secondary">Manage your personal information and preferences</p>
+                </div>
+            </div>
+
+            <!-- Personal Data Form -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-person-lines-fill me-2"></i>Personal Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" class="profile-form">
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Input.FirstName" class="form-label fw-semibold">
+                                        <i class="bi bi-person me-1"></i>First Name
+                                    </label>
+                                    <input asp-for="Input.FirstName" class="form-control form-control-lg"
+                                           placeholder="Enter your first name" />
+                                    <span asp-validation-for="Input.FirstName" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Input.LastName" class="form-label fw-semibold">
+                                        <i class="bi bi-person me-1"></i>Last Name
+                                    </label>
+                                    <input asp-for="Input.LastName" class="form-control form-control-lg"
+                                           placeholder="Enter your last name" />
+                                    <span asp-validation-for="Input.LastName" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label asp-for="Input.DateOfBirth" class="form-label fw-semibold">
+                                <i class="bi bi-calendar3 me-1"></i>Date of Birth
+                            </label>
+                            <input asp-for="Input.DateOfBirth" type="date"
+                                   class="form-control form-control-lg" />
+                            <span asp-validation-for="Input.DateOfBirth" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save me-2"></i>Save Changes
+                            </button>
+                            <a asp-page="./Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Back to Profile
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Additional Options -->
+            <div class="card shadow-sm mt-4">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-shield-lock me-2"></i>Security Options
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid justify-content-center">
+                        <a asp-page="./ChangePassword" role="button" class="btn btn-secondary">
+                            <i class="bi bi-key me-2"></i>Change Password
+                        </a>
+                      
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

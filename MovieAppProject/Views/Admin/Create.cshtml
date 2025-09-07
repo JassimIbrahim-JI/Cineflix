@@ -1,0 +1,185 @@
+﻿@using MovieAppProject.Models.ViewModels.Movies
+@model MovieViewModel
+
+@{
+    ViewData["Title"] = "Add New Movie";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white py-3">
+                    <h3 class="card-title mb-0">
+                        <i class="fas fa-film me-2"></i>Add New Movie
+                    </h3>
+                </div>
+                <div class="card-body p-4">
+                    @if (TempData["MovieCreated"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="fas fa-check-circle me-2"></i>@TempData["MovieCreated"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <form asp-action="Create" method="post" enctype="multipart/form-data" id="movieForm">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <label asp-for="Title" class="form-label fw-bold"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-heading"></i></span>
+                                    <input asp-for="Title" class="form-control" placeholder="Enter movie title" />
+                                </div>
+                                <span asp-validation-for="Title" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="Genre" class="form-label fw-bold"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-theater-masks"></i></span>
+                                    <input asp-for="Genre" class="form-control" placeholder="e.g., Action, Drama" />
+                                </div>
+                                <span asp-validation-for="Genre" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                    
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label fw-bold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-align-left"></i></span>
+                                <textarea asp-for="Description" class="form-control" rows="3" placeholder="Brief movie description"></textarea>
+                            </div>
+                            <span asp-validation-for="Description" class="text-danger small"></span>
+                        </div>
+
+                      
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="Director" class="form-label fw-bold"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-user-tie"></i></span>
+                                    <input asp-for="Director" class="form-control" placeholder="Director's name" />
+                                </div>
+                                <span asp-validation-for="Director" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-3">
+                                <label asp-for="DurationMinutes" class="form-label fw-bold"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                                    <input asp-for="DurationMinutes" class="form-control" placeholder="Minutes" type="number" />
+                                </div>
+                                <span asp-validation-for="DurationMinutes" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-3">
+                                <label asp-for="Rating" class="form-label fw-bold"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-star"></i></span>
+                                    <input asp-for="Rating" class="form-control" placeholder="1-5" min="1" max="5" step="0.1" type="number" />
+                                </div>
+                                <span asp-validation-for="Rating" class="text-danger small"></span>
+                            </div>
+                        </div>
+                         <!--Movie Actors with Character Names-->
+                        <div class="mb-3">
+                            <label class="form-label">Actors</label>
+                            <table class="table table-bordered" id="actorsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Actor</th>
+                                        <th>Character Name</th>
+                                        <th><button type="button" id="addActor" class="btn btn-sm btn-success">+</button></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < Model.Actors.Count; i++)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <select asp-for="@Model.Actors[i].ActorId" asp-items="Model.AvailableActors" class="form-select"></select>
+                                            </td>
+                                            <td>
+                                                <input asp-for="@Model.Actors[i].CharacterName" class="form-control" />
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-sm btn-danger removeRow">x</button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!--Hidden Actors for js code-->
+                        <div id="actorOptions" class="d-none">
+                            @foreach (var actor in Model.AvailableActors)
+                            {
+                                <option value="@actor.Value">@actor.Text</option>
+                            }
+                        </div>
+
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="ReleaseDate" class="form-label fw-bold"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                                    <input asp-for="ReleaseDate" class="form-control" type="date" />
+                                </div>
+                                <span asp-validation-for="ReleaseDate" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Price" class="form-label fw-bold"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                                    <input asp-for="Price" class="form-control" placeholder="0.00" step="0.01" type="number" />
+                                </div>
+                                <span asp-validation-for="Price" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                      
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label asp-for="ImageFile" class="form-label fw-bold"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-image"></i></span>
+                                    <input asp-for="ImageFile" class="form-control" type="file" id="ImageFileInput" />
+                                </div>
+                                <span asp-validation-for="ImageFile" class="text-danger small"></span>
+
+                                <div class="mt-2">
+                                    <img id="imagePreview" src="#" alt="Image preview"
+                                         class="img-thumbnail d-none" style="max-height: 150px;" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="VideoUrl" class="form-label fw-bold"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-video"></i></span>
+                                    <input asp-for="VideoUrl" class="form-control" placeholder="https://example.com/video.mp4" />
+                                </div>
+                                <span asp-validation-for="VideoUrl" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <a asp-action="Index" class="btn btn-outline-secondary me-md-2">
+                                <i class="fas fa-arrow-left me-1"></i> Back to List
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus me-1"></i> Create Movie
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

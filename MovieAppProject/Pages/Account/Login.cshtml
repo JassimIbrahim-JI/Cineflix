@@ -1,0 +1,52 @@
+﻿@page
+@using MovieAppProject.Pages.Account
+@model LoginModel
+@{
+    ViewData["Title"] = "Welcome Back";
+    Layout = "_AuthLayout";
+}
+
+<div class="auth-card">
+    <div class="auth-logo">
+        <i class="bi bi-camera-reels"></i>
+        <h1>Sign In</h1>
+        <p class="text-muted">Continue your cinematic journey</p>
+    </div>
+
+    <form id="account" method="post">
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+        <div class="form-floating mb-2">
+            <input asp-for="Input.Email" class="form-control" autocomplete="username" placeholder="Email" />
+            <label asp-for="Input.Email"></label>
+            <span asp-validation-for="Input.Email" class="text-danger small"></span>
+        </div>
+
+        <div class="form-floating mb-2">
+            <input asp-for="Input.Password" class="form-control" autocomplete="current-password" placeholder="Password" />
+            <label asp-for="Input.Password"></label>
+            <span asp-validation-for="Input.Password" class="text-danger small"></span>
+        </div>
+
+        <div class="d-flex flex-wrap justify-content-center justify-content-sm-between align-items-center mb-3">
+            <div class="form-check mb-2 mb-sm-0">
+                <input class="form-check-input" asp-for="Input.RememberMe" />
+                <label class="form-check-label" asp-for="Input.RememberMe">Remember me</label>
+            </div>
+            <a id="forgot-password" class="text-muted small">Forgot password?</a>
+        </div>
+
+
+        <button type="submit" class="w-100 btn btn-primary btn-lg mb-2">
+            <i class="bi bi-box-arrow-in-right"></i> Sign In
+        </button>
+
+        <div class="text-center mt-2">
+            <p class="text-muted small">New to CineFlix? <a asp-page="./Register">Sign Up</a></p>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

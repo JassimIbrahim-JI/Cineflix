@@ -1,0 +1,13 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using MovieAppProject.Data
+@using MovieAppProject.Utilities
+@inject SignInManager<MovieUser> SignInManager
+
+<ul class="nav nav-pills flex-column manage-nav">
+    <li class="nav-item">
+        <a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" asp-page="./Index">Profile</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-page="/Account/Logout">Logout</a>
+    </li>
+</ul>

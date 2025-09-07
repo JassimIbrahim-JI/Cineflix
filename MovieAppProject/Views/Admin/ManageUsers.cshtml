@@ -1,0 +1,60 @@
+﻿@using MovieAppProject.Models.ViewModels.User
+@model List<UserViewModel>
+@{
+    ViewData["Title"] = "Manage Users";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+        <h3 class="mb-0"><i class="bi bi-people"></i> User Management</h3>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Member Since</th>
+                        <th>Reviews</th>
+                        <th>Purchases</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var user in Model)
+                    {
+                        <tr>
+                            <td>@user.FullName</td>
+                            <td>@user.Email</td>
+                            <td>@user.DateOfBirth</td>
+                            <td>@user.ReviewCount</td>
+                            <td>@user.PurchaseCount</td>
+                            <td>
+                                @if(user.IsAdmin)
+                                {
+                                    <span class="badge bg-primary">Admin</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">User</span>
+                                }
+
+                            </td>
+                            <td>
+                                <form asp-action="ToggleAdmin" method="post">
+                                    <input type="hidden" name="userId" value="@user.Id"/>
+                                    <button type="submit" class="btn btn-sm @(user.IsAdmin ? "btn-warning" : "btn-success")">
+                                        @(user.IsAdmin ? "Remove Admin" : "Make Admin")
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,325 @@
+﻿
+
+    @{
+
+    var routeValues = ViewContext.RouteData.Values;
+
+    var controller = routeValues.ContainsKey("Controller") ? routeValues["Controller"]?.ToString() : null;
+    var action = routeValues.ContainsKey("Action") ? routeValues["Action"]?.ToString() : null;
+    var page = routeValues.ContainsKey("page") ? routeValues["page"]?.ToString() : null;
+
+    var IsIndex = (controller == "Home" && action == "Index") || page == "/Index";
+    }
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CineFlix</title>
+    <link rel="icon" type="image/png" href="~/favcine.png" />
+
+    <!-- Bootstrap 5 CSS -->
+     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- Bootstrap Icons -->
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+     <!--Site CSS-->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+</head>
+<body class="site-layout">
+
+     @Html.AntiForgeryToken()
+    <!-- Header with Navigation -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+            <div class="container">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-play-btn-fill"></i>
+                    <span>CineFlix</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link  @( (controller == "Home" && action == "Index") || page == "/Index" ? "active" : "") "
+                               asp-controller="Home" asp-action="Index">Movies</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(controller == "Home" && action == "NewAndPopular" ? "active" : "")"
+                               asp-controller="Home" asp-action="NewAndPopular">New & Popular</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(controller == "Wishlist" && action == "Index" ? "active" : "")"
+                               asp-controller="Wishlist" asp-action="Index">My List</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto">
+                        @if ((User?.Identity?.IsAuthenticated ?? false))
+                        {
+                        @*      <li class="nav-item mx-1">
+                                 <a class="nav-link btn btn-outline-light btn-sm rounded-pill px-3"
+                                    asp-controller="Wishlist" asp-action="Index">
+                                     <i class="bi bi-heart me-1"></i> Wishlist
+                                 </a>
+                             </li> *@
+                            <li class="nav-item mx-1 position-relative">
+                                <a class="nav-link btn btn-primary btn-sm rounded-pill px-3"
+                                   asp-controller="Cart" asp-action="Index">
+                                    <i class="bi bi-cart3 me-1"></i> Cart
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count">
+                                        0
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-person-circle"></i> @User?.Identity?.Name
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" asp-page="/Account/Manage/Index">Profile</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form class="form-inline" asp-page="/Account/Logout" method="post">
+                                            <button type="submit" class="dropdown-item">Logout</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item mx-1">
+                                <a class="nav-link btn btn-outline-light btn-sm rounded-pill px-3"
+                                   asp-page="/Account/Register">
+                                    Sign Up
+                                </a>
+                            </li>
+                            <li class="nav-item mx-1">
+                                <a class="nav-link btn btn-primary btn-sm rounded-pill px-3"
+                                   asp-page="/Account/Login">
+                                    Login
+                                </a>
+                            </li>
+                        }
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        @if (IsIndex)
+        {
+            <!-- Hero Carousel -->
+            <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    @{
+                        var featuredMovies = ViewData["FeaturedMovies"] as List<Movie>;
+                        if (featuredMovies != null)
+                        {
+                            for (int i = 0; i < Math.Min(5, featuredMovies.Count); i++)
+                            {
+                                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="@i"
+                                        class="@(i == 0 ? "active" : "")" aria-label="Slide @(i+1)"></button>
+                            }
+                        }
+                    }
+                </div>
+                <div class="carousel-inner">
+                    @{
+                        if (featuredMovies != null)
+                        {
+                            for (int i = 0; i < Math.Min(5, featuredMovies.Count); i++)
+                            {
+                                var movie = featuredMovies[i];
+                                <div class="carousel-item @(i == 0 ? "active" : "")">
+                                    <img src="@movie.ImageUrl" class="d-block img-fluid" alt="@movie.Title">
+                                    <div class="carousel-caption">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-12">
+
+                                                    <h3 class="d-md-none fw-bold mb-2">@movie.Title</h3>
+                                                    <h1 class="d-none d-md-block display-4 fw-bold mb-3">@movie.Title</h1>
+
+                                                    <p class="d-none d-md-block lead mb-4">@(movie.Description.Length > 200 ? movie.Description.Substring(0, 200) + "..." : movie.Description)</p>
+
+                                                    <div class="d-none d-md-flex flex-wrap gap-3 mb-4 justify-content-center">
+                                                        <span class="badge bg-primary">@movie.Genre</span>
+                                                        <span>@movie.ReleaseDate.Year</span>
+                                                        <span class="text-warning">
+                                                            <i class="bi bi-star-fill"></i> @movie.Rating/10
+                                                        </span>
+                                                    </div>
+
+                                             
+                                                    <div class="d-flex gap-2 justify-content-center flex-wrap">
+                                                        <a asp-controller="Home" asp-action="Details" asp-route-id="@movie.Id"
+                                                           class="btn btn-secondary btn-sm d-md-none">
+                                                            <i class="bi bi-info-circle"></i> More Info
+                                                        </a>
+                                                        <a asp-controller="Home" asp-action="Details" asp-route-id="@movie.Id"
+                                                           class="btn btn-secondary btn-lg d-none d-md-inline-block">
+                                                            <i class="bi bi-info-circle"></i> More Info
+                                                        </a>
+
+                                                        
+                                                        @if (User.Identity.IsAuthenticated)
+                                                        {
+                                                            <button type="button" data-action="add-to-cart" data-movie-id="@movie.Id"
+                                                                    class="btn btn-primary btn-lg d-none d-md-inline-block">
+                                                                <i class="bi bi-cart-plus"></i> QAR @movie.Price.ToString("0.00")
+                                                            </button>
+                                                        }
+                                                        else
+                                                        {
+                                                            <a asp-area="Identity" asp-page="/Account/Login"
+                                                               class="btn btn-primary btn-lg d-none d-md-inline-block">
+                                                                <i class="bi bi-cart-plus"></i> QAR @movie.Price.ToString("0.00")
+                                                            </a>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    }
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        }
+      
+    </header>
+
+    <!-- Main Content -->
+    <div class="container mt-5 pt-5">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h4 class="mb-3"><i class="bi bi-play-btn-fill me-2"></i>CineFlix</h4>
+                    <p class="text-secondary">The ultimate streaming experience with thousands of movies and TV shows to discover. Watch anytime, anywhere.</p>
+                    <div class="d-flex gap-3 mt-3">
+                        <a href="#"><i class="bi bi-facebook fs-5"></i></a>
+                        <a href="#"><i class="bi bi-twitter fs-5"></i></a>
+                        <a href="#"><i class="bi bi-instagram fs-5"></i></a>
+                        <a href="#"><i class="bi bi-youtube fs-5"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4">
+                    <h5 class="mb-3">Navigation</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a asp-controller="Home" asp-action="Index">Movies</a></li>
+                        <li class="mb-2"><a asp-controller="Home" asp-action="NewAndPopular">New & Popular</a></li>
+                        <li class="mb-2"><a asp-controller="Wishlist" asp-action="Index">My List</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4">
+                    <h5 class="mb-3">Categories</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#">Action</a></li>
+                        <li class="mb-2"><a href="#">Comedy</a></li>
+                        <li class="mb-2"><a href="#">Drama</a></li>
+                        <li class="mb-2"><a href="#">Horror</a></li>
+                        <li class="mb-2"><a href="#">Documentary</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-4 mb-4">
+                    <h5 class="mb-3">Subscribe</h5>
+                    <p class="text-secondary">Subscribe to our newsletter for the latest movie updates and exclusive offers.</p>
+                    <div class="input-group mb-3">
+                        <input type="email" class="form-control" placeholder="Your email" aria-label="Your email">
+                        <button class="btn btn-primary" type="button">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4 bg-secondary">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="text-secondary">&copy; 2023 CineFlix. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <a asp-controller="Home" asp-action="Privacy" class="text-secondary me-3">Privacy Policy</a>
+                 
+                    <a href="#" class="text-secondary me-3">Terms of Service</a>
+                    <a href="#" class="text-secondary">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="toast-container" class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100;">
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/toastAuth.js"></script>
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+        @if (TempData["DataSuccess"] != null)
+        {
+            <text>showAuthNotification('@TempData["DataSuccess"]', 'success');</text>
+        }
+
+        @if (TempData["DataError"] != null)
+        {
+            <text>showAuthNotification('@TempData["DataError"]', 'danger');</text>
+        }
+
+        @if (TempData["LoginSuccess"] != null && (bool)TempData["LoginSuccess"])
+        {
+            <text>showAuthNotification('Login successful!', 'success');</text>
+        }
+
+        @if (TempData["LoginError"] != null)
+        {
+            <text>showAuthNotification('@TempData["LoginError"]', 'danger');</text>
+        }
+
+        @if (TempData["PasswordSuccess"] != null)
+        {
+            <text>showAuthNotification('@TempData["PasswordSuccess"]', 'success');</text>
+        }
+
+        @if (TempData["PasswordError"] != null)
+        {
+            <text>showAuthNotification('@TempData["PasswordError"]', 'danger');</text>
+        }
+
+        @if (TempData["RegisterSuccess"] != null)
+        {
+            <text>showAuthNotification('@TempData["RegisterSuccess"]', 'success');</text>
+        }
+
+        @if (TempData["RegisterError"] != null)
+        {
+            <text>showAuthNotification('@TempData["RegisterError"]', 'danger');</text>
+        }
+
+             });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
