@@ -196,5 +196,4 @@ public async Task AddMovieToCartAsync(string userId, int movieId)
 
 ### 7️⃣ Author
 ```markdown
- 👨‍💻 Author
 Built with ❤️ by Jassim Ibrahim (JI)
