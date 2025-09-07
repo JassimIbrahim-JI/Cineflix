@@ -170,20 +170,27 @@ public async Task AddMovieToCartAsync(string userId, int movieId)
 
 ---
 
-### 6️⃣ Contribution
-This comes **after Example Code**:
+### 🤝 Contribution
 
-```markdown
-## 🤝 Contribution
+1. Fork the repo.
 
-1. Fork the repo
 2. Create a feature branch:
-   ```bash
-   git checkout -b feature/my-feature 
-3. Commit changes:
-  git commit -m "Add my feature"
-4. Push & open a PR 🎉
-```
+    
+    ```bash
+    git checkout -b feature/my-feature
+    ```
+
+3. Commit your changes:
+    
+    ```bash
+    git commit -m "Add my feature"
+    ```
+
+4. Push & open a PR:
+    
+    ```bash
+    git push origin feature/my-feature
+    ```
 
 ---
 
