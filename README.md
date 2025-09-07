@@ -137,30 +137,10 @@ dotnet run
 
 ---
 
-4️⃣ Installation & Setup
-## 🚀 Installation & Setup
-
-Make sure you have .NET 8 SDK and SQL Server installed.
-
-```bash
-# Clone the repository
-git clone https://github.com/JassimIbrahim-JI/Cineflix.git
-cd Cineflix
-
-# Restore dependencies
-dotnet restore
-
-# Apply database migrations
-dotnet ef database update
-
-# Run the application
-dotnet run
-
 
 ### 5️⃣ Example Code – Repository Pattern
 This section **goes immediately after Installation & Setup**:
 
-```markdown
 ## 📜 Example Code – Repository Pattern
 
 ```csharp
@@ -213,6 +193,7 @@ Finally, **Author section comes at the very end**:
 
 ```markdown
 ## 👨‍💻 Author
+```
 
 Built with ❤️ by Jassim Ibrahim (JI)
 ```
