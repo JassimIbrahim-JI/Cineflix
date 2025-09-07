@@ -16,3 +16,7 @@ Release/
 *.log
 *.dbmdl
 *.jfm
+
+# Configuration files
+appsettings.json
+appsettings.Development.json
