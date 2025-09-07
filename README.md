@@ -181,7 +181,6 @@ This comes **after Example Code**:
    ```bash
    git checkout -b feature/my-feature 
 3. Commit changes:
-```bash
   git commit -m "Add my feature"
 4. Push & open a PR 🎉
 ```
@@ -193,7 +192,4 @@ Finally, **Author section comes at the very end**:
 
 ```markdown
 ## 👨‍💻 Author
-```
-
 Built with ❤️ by Jassim Ibrahim (JI)
-```
