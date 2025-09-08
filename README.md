@@ -70,7 +70,7 @@ It allows users to explore, wishlist, purchase, and review movies, while admins 
 - **Authentication:** ASP.NET Identity (with Roles)
 - **Payments:** Stripe (Payment Intents API)
 - **APIs:** RESTful endpoints for movies, wishlist, and cart
-- **Architecture:** Repository & Unit of Work patterns
+- **Architecture:** Repository & Unit of Work patterns(Not Implement in this project)
 
 ---
 
