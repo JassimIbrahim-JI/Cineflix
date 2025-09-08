@@ -224,5 +224,4 @@ Built with ❤️ by Jassim Ibrahim (JI)
 
 🔒 Security-conscious .NET Developer
 📧 Email: jassim.ibrhm@gmail.com
-🌐 GitHub: [JassimIbrahim-JI](https://github.com/JassimIbrahim-JI)
 
