@@ -25,7 +25,7 @@ It allows users to explore, wishlist, purchase, and review movies, while admins 
 ---
 
 ## 📽️ Demo Video
-👉 [Watch Demo on Google Drive](https://drive.google.com/file/d/1Vn3lUnltd97inZea9MVy4VIOscAlOgge/view?usp=drive_link)
+[![Watch the demo](./wwwroot/assets/demo-preview.png)](https://drive.google.com/file/d/1Vn3lUnltd97inZea9MVy4VIOscAlOgge/view?usp=drive_link)
 
 ---
 
