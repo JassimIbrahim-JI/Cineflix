@@ -27,6 +27,12 @@ namespace MovieAppProject.Controllers
                 .Where(w => w.UserId == userId)
                 .ToListAsync();
 
+            if (User.Identity.IsAuthenticated)
+            {
+                var moviesInCart = await _movieRepository.GetCartItemsAsync(userId);
+                ViewData["MoviesInCart"] = moviesInCart.Select(c => c.MovieId).ToList();
+            }
+
             return View(wishlistItems);
         }
 

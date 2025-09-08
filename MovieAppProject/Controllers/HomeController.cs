@@ -76,29 +76,52 @@ namespace MovieAppProject.Controllers
                 PopularMovies = popularMovies
             };
 
+            if (User.Identity.IsAuthenticated)
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var moviesInCart = await _movieRepository.GetCartItemsAsync(userId);
+                ViewData["MoviesInCart"] = moviesInCart.Select(c => c.MovieId).ToList();
+            }
+
             return View(viewModel);
         }
 
-        [Authorize]
+     /*   [Authorize]
         public async Task<IActionResult> MyList()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+           var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var wishlistItems = await _context.WishlistItems
                 .Include(w => w.Movie)
                 .Where(w => w.UserId == userId)
                 .ToListAsync();
 
             return View(wishlistItems);
-        }
+        }*/
 
-        public async Task<IActionResult>Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
             var movie = await _movieRepository.GetByIdAsync(id);
-            if (movie == null)
-                return NotFound();
+            if (movie == null) return NotFound();
 
+            int? userRating = null;
+
+            if (User.Identity.IsAuthenticated)
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var review = await _context.Reviews
+                    .FirstOrDefaultAsync(r => r.MovieId == id && r.UserId == userId);
+
+                if (review != null)
+                    userRating = review.Rating;
+
+                var moviesInCart = await _movieRepository.GetCartItemsAsync(userId);
+                ViewData["MoviesInCart"] = moviesInCart.Select(c => c.MovieId).ToList();
+            }
+
+            ViewBag.UserRating = userRating; 
             return View(movie);
         }
+
 
 
         [HttpGet]

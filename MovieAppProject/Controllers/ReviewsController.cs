@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MovieAppProject.Data;
+using MovieAppProject.Interfaces;
 using MovieAppProject.Models;
 using System.Security.Claims;
 
@@ -11,22 +12,21 @@ namespace MovieAppProject.Controllers
     [Authorize]
     public class ReviewsController : Controller
     {
-        private readonly MovieDbContext _context;
+        private readonly IMovieRepository _movieRepository;
         private readonly UserManager<MovieUser> _userManager;
 
-        public ReviewsController(MovieDbContext context, UserManager<MovieUser> userManager)
+        public ReviewsController(IMovieRepository movieRepository, UserManager<MovieUser> userManager)
         {
-            _context = context;
+            _movieRepository = movieRepository;
             _userManager = userManager;
         }
 
-        // POST: Reviews/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(int movieId, int rating, string content)
         {
-            var movie = await _context.Movies.FindAsync(movieId);
-            if (movie == null)
+            var movieExists = await _movieRepository.ExistsAsync(movieId);
+            if (!movieExists)
             {
                 return NotFound();
             }
@@ -34,9 +34,7 @@ namespace MovieAppProject.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = await _userManager.FindByIdAsync(userId);
 
-            // Check if user already reviewed this movie
-            var existingReview = await _context.Reviews
-                .FirstOrDefaultAsync(r => r.MovieId == movieId && r.UserId == userId);
+            var existingReview = await _movieRepository.GetUserReviewForMovieAsync(userId, movieId);
 
             if (existingReview != null)
             {
@@ -53,25 +51,21 @@ namespace MovieAppProject.Controllers
                 ReviewDate = DateTime.UtcNow,
                 User = user
             };
+            await _movieRepository.AddReview(review);
 
-            _context.Reviews.Add(review);
-            await _context.SaveChangesAsync();
-
-            // Update movie average rating
-            await UpdateMovieRating(movieId);
+            await _movieRepository.UpdateMovieRatingAsync(movieId);
 
             TempData["SuccessMessage"] = "Thank you for your review!";
             return RedirectToAction("Details", "Home", new { id = movieId });
         }
 
-        // POST: Reviews/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id, int movieId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var review = await _context.Reviews.FindAsync(id);
+            var review = await _movieRepository.GetReviewByIdAsync(id);
             if (review == null)
             {
                 return NotFound();
@@ -82,28 +76,12 @@ namespace MovieAppProject.Controllers
                 return Forbid();
             }
 
-            _context.Reviews.Remove(review);
-            await _context.SaveChangesAsync();
+            await _movieRepository.DeleteReviewAsync(id);
 
-            // Update movie average rating
-            await UpdateMovieRating(movieId);
+            await _movieRepository.UpdateMovieRatingAsync(movieId);
 
             TempData["SuccessMessage"] = "Review deleted successfully.";
             return RedirectToAction("Details", "Home", new { id = movieId });
-        }
-
-        private async Task UpdateMovieRating(int movieId)
-        {
-            var movie = await _context.Movies
-                .Include(m => m.Reviews)
-                .FirstOrDefaultAsync(m => m.Id == movieId);
-
-            if (movie != null && movie.Reviews.Any())
-            {
-                movie.Rating = (float)Math.Round(movie.Reviews.Average(r => r.Rating), 1);
-                _context.Movies.Update(movie);
-                await _context.SaveChangesAsync();
-            }
         }
     }
 }

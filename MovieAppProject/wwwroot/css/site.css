@@ -1,4 +1,4 @@
-:root {
+﻿:root {
     /* Color Variables */
     --primary: #e50914;
     --primary-dark: #b8070f;
@@ -901,28 +901,6 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: bold;
 }
 
-.rating-input {
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: flex-end;
-}
-
-    .rating-input > input {
-        display: none;
-    }
-
-    .rating-input > label {
-        font-size: 1.5rem;
-        color: #ddd;
-        cursor: pointer;
-        transition: var(--transition);
-    }
-
-        .rating-input > input:checked ~ label,
-        .rating-input > label:hover,
-        .rating-input > label:hover ~ label {
-            color: #ffc107;
-        }
 
 .detail-item {
     padding: 1rem;
@@ -1099,9 +1077,85 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0;
 }
 
-.btn:disabled {
-    color: transparent !important;
+
+.card-overlay .btn:disabled,
+.card-overlay .btn-success:disabled {
+    color: white !important;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
+
+
+.card-overlay .btn:disabled .bi,
+.card-overlay .btn-success:disabled .bi {
+    color: white !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.card-overlay .btn-success:disabled {
+    background: var(--bs-success) !important;
+    border-color: var(--bs-success) !important;
+    color: white !important;
+}
+
+/*Modal Dark STYLE*/
+.modal-content.bg-dark {
+    background: var(--dark-card) !important;
+    color: var(--text-primary);
+    border-radius: var(--border-radius);
+}
+.btn-close-white {
+    filter: invert(1);
+}
+
+.star-rating {
+    font-size: 2rem;
+    cursor: pointer;
+    display: flex;
+}
+
+.star-rating .star {
+    color: #555;
+    padding: 0 2px;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.star-rating .star.active {
+    color: #ffc107;
+}
+.star-rating .star:hover {
+    transform: scale(1.1);
+}
+
+.star-rating:hover .star {
+    color: #ffc107;
+}
+
+.star-rating .star:hover ~ .star {
+    color: #555;
+}
+
+.star-rating:not(:hover) .star.active {
+    color: #ffc107;
+}
+
+.star-rating:not(:hover) .star.active ~ .star {
+    color: #555;
+}
+
+.rating-live,
+.rating-live input,
+.rating-live label,
+.rating-live label:hover,
+.rating-live input:checked ~ label,
+.rating-live label:hover ~ label {
+    display: none !important; 
+}
+
+
+
+
 
 
 

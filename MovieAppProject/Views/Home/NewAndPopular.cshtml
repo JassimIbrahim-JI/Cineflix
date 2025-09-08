@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "New & Popular";
+    var moviesInCart = ViewData["MoviesInCart"] as List<int> ?? new List<int>();
 }
 
 <div class="container py-5">
@@ -13,6 +14,8 @@
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
             @foreach (var movie in Model.RecentMovies)
             {
+                var isInCart = moviesInCart.Contains(movie.Id);
+
                 <div class="col">
                     <div class="card h-100 movie-card">
                         <div class="card-image-container">
@@ -26,9 +29,17 @@
                                 <div class="overlay-content">
                                     @if (User.Identity.IsAuthenticated)
                                     {
-                                        <button type="button" data-action="add-to-cart" data-movie-id="@movie.Id" class="btn btn-primary btn-sm">
-                                            <i class="bi bi-cart-plus"></i> Add to Cart
-                                        </button>
+                                        if (isInCart)
+                                        {
+                                            <button disabled class="btn btn-success btn-sm">
+                                                <i class="bi bi-check-circle-fill"></i> In Cart
+                                            </button>
+                                        }else
+                                        {
+                                            <button type="button" data-action="add-to-cart" data-movie-id="@movie.Id" class="btn btn-primary btn-sm">
+                                                <i class="bi bi-cart-plus"></i> Add to Cart
+                                            </button>
+                                        }
                                     }
                                     else
                                     {

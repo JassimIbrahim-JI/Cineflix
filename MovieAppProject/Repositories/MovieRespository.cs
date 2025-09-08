@@ -75,12 +75,6 @@ namespace MovieAppProject.Repositories
             return true;
         }
 
-        public async Task AddReview(Review review)
-        {
-            await _db.Reviews.AddAsync(review);
-            await _db.SaveChangesAsync();
-        }
-
         public async Task<Purchase> CreatePurchaseAsync(string userId, string paymentIntentId, List<Cart> cartItems)
         {
             if (!cartItems.Any())
@@ -215,11 +209,51 @@ namespace MovieAppProject.Repositories
                 await _db.SaveChangesAsync();
             }
         }
-
         public async Task UpdateAsync(Movie movie)
         {
             _db.Movies.Update(movie);
             await _db.SaveChangesAsync();
         }
+
+        public async Task AddReview(Review review)
+        {
+            await _db.Reviews.AddAsync(review);
+            await _db.SaveChangesAsync();
+        }
+
+        public async Task<Review> GetReviewByIdAsync(int reviewId)
+        {
+            return await _db.Reviews.FindAsync(reviewId);
+        }
+
+        public async Task<Review> GetUserReviewForMovieAsync(string userId, int movieId)
+        {
+            return await _db.Reviews
+                .FirstOrDefaultAsync(r => r.MovieId == movieId && r.UserId == userId);
+        }
+
+        public async Task DeleteReviewAsync(int reviewId)
+        {
+            var review = await _db.Reviews.FindAsync(reviewId);
+            if (review != null)
+            {
+                _db.Reviews.Remove(review);
+                await _db.SaveChangesAsync();
+            }
+        }
+        public async Task UpdateMovieRatingAsync(int movieId)
+        {
+            var movie = await _db.Movies
+                .Include(m => m.Reviews)
+                .FirstOrDefaultAsync(m => m.Id == movieId);
+
+            if (movie != null && movie.Reviews.Any())
+            {
+                movie.Rating = (float)Math.Round(movie.Reviews.Average(r => r.Rating), 1);
+                _db.Movies.Update(movie);
+                await _db.SaveChangesAsync();
+            }
+        }
+
     }
 }

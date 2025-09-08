@@ -32,12 +32,14 @@ const CartManager = {
         try {
             const addButton = document.querySelector(`[data-action="add-to-cart"][data-movie-id="${movieId}"]`);
 
-            // here I try to disable button immediately to prevent multiple clicks
+            // First I will Store original HTML before changing it
+            const originalHtml = addButton.innerHTML;
+
             if (addButton) {
                 addButton.disabled = true;
                 addButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Adding...';
+                addButton.offsetHeight;
             }
-
             const token = this.getAntiForgeryToken();
             if (!token) {
                 throw new Error('Anti-forgery token not found');
@@ -62,17 +64,20 @@ const CartManager = {
                     await this.updateCartCount();
                     this.showNotification(responseData.message, 'success');
 
-                    // Update button to show its in cart
                     if (addButton) {
                         addButton.disabled = true;
+
                         addButton.innerHTML = '<i class="bi bi-check-circle-fill"></i> In Cart';
                         addButton.classList.remove('btn-primary');
                         addButton.classList.add('btn-success');
+
+                        addButton.style.display = 'inline-block';
+                        addButton.style.visibility = 'visible';
+                        addButton.style.opacity = '1';
                     }
                 } else {
                     this.showNotification(responseData.message, 'warning');
 
-                    // Re-enable button f not successful
                     if (addButton) {
                         addButton.disabled = false;
                         addButton.innerHTML = '<i class="bi bi-cart-plus"></i> Add to Cart';
@@ -86,13 +91,11 @@ const CartManager = {
             console.error('Error adding to cart:', error);
             this.showNotification('Error adding movie to cart.', 'error');
 
-            // Re-enable button on error
-            const addButton = document.querySelector(`[data-action="add-to-cart"][data-movie-id="${movieId}"]`);
-            if (addButton) {
+            if (addButton && originalHtml) {
+                addButton.innerHTML = originalHtml;
                 addButton.disabled = false;
-                addButton.innerHTML = '<i class="bi bi-cart-plus"></i> Add to Cart';
             }
-            return false;
+           
         }
     },
 
@@ -381,7 +384,6 @@ const SearchManager = {
     }
 };
 
-
 // STRIPE FUNCTIONALITY
 const StripeManager = {
     init: function (stripeKey) {
@@ -505,7 +507,6 @@ const StripeManager = {
     }
 };
 
-
 //  VIDEO PLAYER FUNCTIONALITY 
 const VideoPlayerManager = {
     init: function (videoElement, movieId, isTrailer = false) {
@@ -625,7 +626,6 @@ const VideoPlayerManager = {
     }
 };
 
-
 function handleVideoError() {
     console.error('Video playback error');
     const videoContainer = document.querySelector('.video-player-wrapper');
@@ -697,6 +697,76 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+    const starRatings = document.querySelectorAll('.star-rating');
+
+    starRatings.forEach(ratingContainer => {
+        const stars = ratingContainer.querySelectorAll('.star');
+        const hiddenInput = ratingContainer.querySelector('input[type="hidden"]');
+
+        let isHovering = false;
+        let hoverValue = 0;
+
+        stars.forEach(star => {
+            star.addEventListener('click', function () {
+                const value = parseInt(this.getAttribute('data-value'));
+                hiddenInput.value = value;
+                stars.forEach(s => {
+                    const starValue = parseInt(s.getAttribute('data-value'));
+                    if (starValue <= value) {
+                        s.textContent = '★';
+                        s.classList.add('active');
+                    } else {
+                        s.textContent = '☆';
+                        s.classList.remove('active');
+                    }
+                });
+
+                isHovering = false;
+            });
+
+            star.addEventListener('mouseover', function () {
+                isHovering = true;
+                hoverValue = parseInt(this.getAttribute('data-value'));
+                stars.forEach(s => {
+                    const starValue = parseInt(s.getAttribute('data-value'));
+                    if (starValue <= hoverValue) {
+                        s.textContent = '★';
+                    } else {
+                        s.textContent = '☆';
+                    }
+                });
+            });
+            star.addEventListener('mouseout', function () {
+                isHovering = false;
+                const currentValue = parseInt(hiddenInput.value);
+                stars.forEach(s => {
+                    const starValue = parseInt(s.getAttribute('data-value'));
+                    if (starValue <= currentValue) {
+                        s.textContent = '★';
+                    } else {
+                        s.textContent = '☆';
+                    }
+                });
+            });
+        });
+
+      
+        if (hiddenInput.value > 0) {
+            const currentValue = parseInt(hiddenInput.value);
+            stars.forEach(star => {
+                const starValue = parseInt(star.getAttribute('data-value'));
+                if (starValue <= currentValue) {
+                    star.textContent = '★';
+                    star.classList.add('active');
+                }
+            });
+        } else {
+         
+            stars.forEach(star => {
+                star.textContent = '☆';
+            });
+        }
+    });
 
 
     

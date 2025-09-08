@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Your Wishlist";
+    var moviesInCart = ViewData["MoviesInCart"] as List<int> ?? new List<int>();
 }
 
 <div class="container mt-5">
@@ -18,6 +19,8 @@
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
             @foreach (var item in Model)
             {
+                var isInCart = moviesInCart.Contains(item.MovieId);
+
                 <div class="col" data-wishlist-item-id="@item.MovieId">
                     <div class="card h-100 movie-card">
                         <div class="card-image-container">
@@ -32,14 +35,28 @@
                                     <button type="button" data-action="wishlist" data-wishlist-action="remove" data-movie-id="@item.MovieId" class="btn btn-danger btn-sm">
                                         <i class="bi bi-heart-fill"></i> Remove
                                     </button>
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        if (isInCart)
+                                        {
+                                            <button disabled class="btn btn-success btn-sm">
+                                                <i class="bi bi-check-circle-fill"></i> In Cart
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button type="button" data-action="add-to-cart" data-movie-id="@item.MovieId" class="btn btn-success btn-sm">
+                                                <i class="bi bi-cart-plus"></i> Add to Cart
+                                            </button>
 
-                                    <button type="button" data-action="add-to-cart" data-movie-id="@item.MovieId" class="btn btn-success btn-sm">
-                                        <i class="bi bi-cart-plus"></i> Add to Cart
-                                    </button>
+                                        }
 
-                                    <a asp-action="Details" asp-route-id="@item.MovieId" class="btn btn-view-details btn-sm mt-1">
-                                        Details
-                                    </a>
+                                        <a asp-action="Details" asp-route-id="@item.MovieId" class="btn btn-view-details btn-sm mt-1">
+                                            Details
+                                        </a>
+                                    }
+                                  
+                                   
                                 </div>
                             </div>
                         </div>

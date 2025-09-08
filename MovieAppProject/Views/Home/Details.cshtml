@@ -8,6 +8,8 @@
 
 @{
     ViewData["Title"] = Model.Title;
+    int? userRating = ViewBag.UserRating as int?;
+    var moviesInCart = ViewData["MoviesInCart"] as List<int> ?? new List<int>();
 }
 
 @functions {
@@ -87,9 +89,19 @@
              
                     @if (User.Identity.IsAuthenticated && !hasPurchased)
                     {
-                        <button type="button" data-action="add-to-cart" data-movie-id="@Model.Id" class="btn btn-primary btn-sm">
-                            <i class="bi bi-cart-plus me-2"></i> QAR @Model.Price.ToString("0.00")
-                        </button>
+                        var isInCart = moviesInCart.Contains(Model.Id);
+                        if (isInCart)
+                        {
+                            <button disabled class="btn btn-success btn-sm">
+                                <i class="bi bi-check-circle-fill me-2"></i> In Cart
+                            </button>
+                        }
+                        else{
+                            <button type="button" data-action="add-to-cart" data-movie-id="@Model.Id" class="btn btn-primary btn-sm">
+                                <i class="bi bi-cart-plus me-2"></i> QAR @Model.Price.ToString("0.00")
+                            </button>
+                        }
+                       
 
                         <!-- Wishlist Button -->
                         var isInWishlist = await _context.WishlistItems
@@ -224,12 +236,6 @@
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h2 class="section-title mb-0"><i class="bi bi-chat-square-text-fill me-2"></i>Reviews (@Model.Reviews.Count)</h2>
 
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reviewModal">
-                                <i class="bi bi-plus-circle me-2"></i>Add Review
-                            </button>
-                        }
                     </div>
 
                     @if (Model.Reviews.Any())
@@ -303,37 +309,38 @@
     </div>
 </div>
 
-<!-- Review Modal -->
 @if (User.Identity.IsAuthenticated)
 {
     <div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white border-0">
+                <div class="modal-header border-0">
                     <h5 class="modal-title">Add Your Review</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form asp-controller="Reviews" asp-action="Create" method="post">
                     <div class="modal-body">
                         <input type="hidden" name="MovieId" value="@Model.Id" />
+
                         <div class="mb-3">
                             <label class="form-label">Rating</label>
-                            <div class="rating-input">
+                            <div class="star-rating">
                                 @for (int i = 1; i <= 5; i++)
                                 {
-                                    <input type="radio" id="star@(6-i)" name="Rating" value="@(6-i)" @(i == 1 ? "checked" : "") />
-                                    <label for="star@(6-i)" title="@(6-i) stars">
-                                        <i class="bi bi-star"></i>
-                                    </label>
+                                    <span class="star" data-value="@i">☆</span>
                                 }
+                                <input type="hidden" id="selectedRating" name="Rating" value="@(ViewBag.UserRating ?? 0)" />
                             </div>
                         </div>
+
+
+
                         <div class="mb-3">
                             <label class="form-label">Your Review</label>
-                            <textarea name="Content" class="form-control" rows="4" placeholder="Share your thoughts about this movie..." required></textarea>
+                            <textarea name="Content" class="form-control bg-dark text-white" rows="4" placeholder="Share your thoughts about this movie..." required></textarea>
                         </div>
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer border-0">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary">Submit Review</button>
                     </div>
@@ -343,7 +350,7 @@
     </div>
 }
 
-<!-- Admin Actions -->
+
 @if (User.IsInRole("Admin"))
 {
     <div class="container mb-5">
