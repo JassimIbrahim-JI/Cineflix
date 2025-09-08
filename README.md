@@ -138,9 +138,6 @@ dotnet run
 ---
 
 
-### 5️⃣ Example Code – Repository Pattern
-This section **goes immediately after Installation & Setup**:
-
 ## 📜 Example Code – Repository Pattern
 
 ```csharp
@@ -194,6 +191,6 @@ This section **goes immediately after Installation & Setup**:
 
 ---
 
-### 7️⃣ Author
+### 👤 Author
 ```markdown
 Built with ❤️ by Jassim Ibrahim (JI)
