@@ -144,28 +144,28 @@ This section **goes immediately after Installation & Setup**:
 ## 📜 Example Code – Repository Pattern
 
 ```csharp
-public async Task AddMovieToCartAsync(string userId, int movieId)
-{
-    var existingCart = await _db.CartItems
-        .FirstOrDefaultAsync(c => c.UserId == userId && c.MovieId == movieId);
+   public async Task<bool> AddMovieToCartAsync(string userId, int movieId)
+   {
+       var existingCart = await _db.CartItems.FirstOrDefaultAsync(c => c.UserId == userId && c.MovieId == movieId);
 
-    if (existingCart == null)
-    {
-        var cartItem = new Cart
-        {
-            UserId = userId,
-            MovieId = movieId,
-            Quantity = 1,
-            AddedDate = DateTime.UtcNow
-        };
-        await _db.CartItems.AddAsync(cartItem);
-    }
-    else
-    {
-        existingCart.Quantity++;
-    }
-    await _db.SaveChangesAsync();
-}
+       if (existingCart != null)
+       {
+          
+           return false;
+       }
+
+       var cartItem = new Cart
+       {
+           UserId = userId,
+           MovieId = movieId,
+           Quantity = 1,
+           AddedDate = DateTime.UtcNow
+       };
+
+       await _db.CartItems.AddAsync(cartItem);
+       await _db.SaveChangesAsync();
+       return true;
+   }
 ```
 
 ---
