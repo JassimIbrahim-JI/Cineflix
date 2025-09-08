@@ -137,6 +137,33 @@ dotnet run
 
 ---
 
+## ⚡ Quick Start Commands
+
+**Run these commands in order:**
+
+```bash
+# 1. Clone the repository and navigate to the project folder
+git clone https://github.com/JassimIbrahim-JI/Cineflix.git
+cd Cineflix
+
+# 2. Restore NuGet packages
+dotnet restore
+
+# 3. Set up user secrets (ONE TIME SETUP)
+dotnet user-secrets init
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=localhost;Database=MovieDB;Trusted_Connection=true;TrustServerCertificate=true;"
+dotnet user-secrets set "Stripe:PublishableKey" "pk_test_your_key_here"
+dotnet user-secrets set "Stripe:SecretKey" "sk_test_your_key_here"
+
+# 4. Create and update the database using EF Core migrations
+dotnet ef database update
+
+# 5. Run the application! 🚀
+dotnet run
+
+```
+
+---
 
 ## 📜 Example Code – Repository Pattern
 
@@ -194,3 +221,8 @@ dotnet run
 ### 👤 Author
 ```markdown
 Built with ❤️ by Jassim Ibrahim (JI)
+
+🔒 Security-conscious .NET Developer
+📧 Email: jassim.ibrhm@gmail.com
+🌐 GitHub: [JassimIbrahim-JI](https://github.com/JassimIbrahim-JI)
+
