@@ -65,7 +65,7 @@ It allows users to explore, wishlist, purchase, and review movies, while admins 
 ## 🛠️ Tech Stack
 
 - **Backend:** ASP.NET Core MVC 8, C#
-- **Frontend:** Razor Views, Bootstrap 5, jQuery
+- **Frontend:** Razor Views, Bootstrap 5, Vanilla JS
 - **Database:** SQL Server + EF Core
 - **Authentication:** ASP.NET Identity (with Roles)
 - **Payments:** Stripe (Payment Intents API)
