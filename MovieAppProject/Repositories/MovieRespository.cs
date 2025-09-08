@@ -52,25 +52,27 @@ namespace MovieAppProject.Repositories
             }
         }
 
-        public async Task AddMovieToCartAsync(string userId, int movieId)
+        public async Task<bool> AddMovieToCartAsync(string userId, int movieId)
         {
             var existingCart = await _db.CartItems.FirstOrDefaultAsync(c => c.UserId == userId && c.MovieId == movieId);
-            if(existingCart == null)
+
+            if (existingCart != null)
             {
-                var cartItem = new Cart
-                {
-                    UserId = userId,
-                    MovieId = movieId,
-                    Quantity = 1,
-                    AddedDate = DateTime.UtcNow
-                };
-                await _db.CartItems.AddAsync(cartItem);
+                // Movie already in cart, don't add again
+                return false;
             }
-            else
+
+            var cartItem = new Cart
             {
-                existingCart.Quantity++;
-            }
-                await _db.SaveChangesAsync();
+                UserId = userId,
+                MovieId = movieId,
+                Quantity = 1,
+                AddedDate = DateTime.UtcNow
+            };
+
+            await _db.CartItems.AddAsync(cartItem);
+            await _db.SaveChangesAsync();
+            return true;
         }
 
         public async Task AddReview(Review review)

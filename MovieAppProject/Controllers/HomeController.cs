@@ -41,6 +41,13 @@ namespace MovieAppProject.Controllers
 
             var featuredMovies = await _movieRepository.GetFeaturedMoviesAsync(5);
             ViewData["FeaturedMovies"] = featuredMovies;
+            if (User.Identity.IsAuthenticated)
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var moviesInCart = await _movieRepository.GetCartItemsAsync(userId);
+                ViewData["MoviesInCart"] = moviesInCart.Select(c => c.MovieId).ToList();
+            }
+       
 
             int pageSize = 6;
             var movies = await _movieRepository.GetPaginedAsync(pageNumber ?? 1, pageSize, sortOrder, searchTerm);

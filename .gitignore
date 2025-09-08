@@ -18,5 +18,5 @@ Release/
 *.jfm
 
 # Configuration files
-appsettings.json
-appsettings.Development.json
+MovieAppProject/appsettings.json
+MovieAppPorject/appsettings.Development.json

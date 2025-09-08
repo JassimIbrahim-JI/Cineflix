@@ -30,6 +30,14 @@ const CartManager = {
 
     addToCart: async function (movieId) {
         try {
+            const addButton = document.querySelector(`[data-action="add-to-cart"][data-movie-id="${movieId}"]`);
+
+            // here I try to disable button immediately to prevent multiple clicks
+            if (addButton) {
+                addButton.disabled = true;
+                addButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Adding...';
+            }
+
             const token = this.getAntiForgeryToken();
             if (!token) {
                 throw new Error('Anti-forgery token not found');
@@ -47,16 +55,43 @@ const CartManager = {
                 body: formData
             });
 
+            const responseData = await response.json();
+
             if (response.ok) {
-                await this.updateCartCount();
-                this.showNotification('Movie added to cart successfully!', 'success');
-                return true;
+                if (responseData.success) {
+                    await this.updateCartCount();
+                    this.showNotification(responseData.message, 'success');
+
+                    // Update button to show its in cart
+                    if (addButton) {
+                        addButton.disabled = true;
+                        addButton.innerHTML = '<i class="bi bi-check-circle-fill"></i> In Cart';
+                        addButton.classList.remove('btn-primary');
+                        addButton.classList.add('btn-success');
+                    }
+                } else {
+                    this.showNotification(responseData.message, 'warning');
+
+                    // Re-enable button f not successful
+                    if (addButton) {
+                        addButton.disabled = false;
+                        addButton.innerHTML = '<i class="bi bi-cart-plus"></i> Add to Cart';
+                    }
+                }
+                return responseData.success;
             } else {
                 throw new Error('Server returned error status');
             }
         } catch (error) {
             console.error('Error adding to cart:', error);
             this.showNotification('Error adding movie to cart.', 'error');
+
+            // Re-enable button on error
+            const addButton = document.querySelector(`[data-action="add-to-cart"][data-movie-id="${movieId}"]`);
+            if (addButton) {
+                addButton.disabled = false;
+                addButton.innerHTML = '<i class="bi bi-cart-plus"></i> Add to Cart';
+            }
             return false;
         }
     },

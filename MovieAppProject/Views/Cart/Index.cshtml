@@ -25,8 +25,6 @@
                                     <tr>
                                         <th>Movie</th>
                                         <th>Price</th>
-                                        <th>Quantity</th>
-                                        <th>Total</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -46,18 +44,8 @@
                                             </td>
                                             <td class="align-middle">QAR @item.Movie.Price.ToString("0.00")</td>
                                             <td class="align-middle">
-                                                <form asp-action="UpdateQuantity" method="post" class="d-inline">
-                                                    <input type="hidden" name="id" value="@item.MovieId" />
-                                                    <div class="input-group input-group-sm" style="width: 100px;">
-                                                        <input type="number" name="quantity" value="@item.Quantity" min="1"
-                                                               class="form-control" onchange="this.form.submit()" />
-                                                    </div>
-                                                </form>
-                                            </td>
-                                            <td class="align-middle fw-bold">QAR @((item.Movie.Price * item.Quantity).ToString("0.00"))</td>
-                                            <td class="align-middle">
                                                 <button type="button" data-action="remove-from-cart" data-movie-id="@item.MovieId" class="btn btn-sm btn-outline-danger">
-                                                    <i class="bi bi-trash"></i>
+                                                    <i class="bi bi-trash"></i> Remove
                                                 </button>
                                             </td>
                                         </tr>
@@ -72,10 +60,9 @@
                     <a asp-controller="Movies" asp-action="Index" class="btn btn-primary">
                         <i class="bi bi-arrow-left me-2"></i>Continue Shopping
                     </a>
-                       <a asp-action="Checkout" class="btn btn-success btn-lg">
-                                <i class="bi bi-lock-fill me-2"></i>Complete Purchase
-                      </a>
-
+                    <a asp-action="Checkout" class="btn btn-success btn-lg">
+                        <i class="bi bi-lock-fill me-2"></i>Complete Purchase
+                    </a>
                 </div>
             </div>
 
@@ -85,7 +72,7 @@
                         <h5 class="card-title mb-4">Order Summary</h5>
 
                         <div class="d-flex justify-content-between mb-2">
-                            <span>Subtotal:</span>
+                            <span>Subtotal (@Model.CartItems.Count() items):</span>
                             <span>QAR @Model.TotalAmount.ToString("0.00")</span>
                         </div>
 
@@ -122,4 +109,3 @@
         </div>
     }
 </div>
-

@@ -47,19 +47,31 @@ namespace MovieAppProject.Controllers
         public async Task<IActionResult> AddToCart(int id)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            await _movieRepository.AddMovieToCartAsync(userId, id);
+            var result = await _movieRepository.AddMovieToCartAsync(userId, id);
 
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
                 var count = await _context.CartItems.Where(c => c.UserId == userId)
                     .SumAsync(c => c.Quantity);
 
-                return Json(new
+                if (result)
                 {
-                    success = true,
-                    message = "Item added to cart",
-                    count = count
-                });
+                    return Json(new
+                    {
+                        success = true,
+                        message = "Item added to cart",
+                        count = count
+                    });
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Movie is already in your cart",
+                        count = count
+                    });
+                }
             }
 
             return RedirectToAction("Index");
@@ -91,20 +103,24 @@ namespace MovieAppProject.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
-        public async Task<IActionResult> UpdateQuantity(int id, int quantity)
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var cartItem = await _movieRepository.GetCartItemAsync(userId, id);
 
-            if (cartItem != null)
-            {
-                cartItem.Quantity = quantity;
-                await _context.SaveChangesAsync();
-            }
+        // Quantity updates are not required:
+        // a movie can only be purchased once and remains fixed in the cart(Fixed Qty = 1)
 
-            return RedirectToAction("Index");
-        }
+        /* [HttpPost]
+         public async Task<IActionResult> UpdateQuantity(int id, int quantity)
+         {
+             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+             var cartItem = await _movieRepository.GetCartItemAsync(userId, id);
+
+             if (cartItem != null)
+             {
+                 cartItem.Quantity = quantity;
+                 await _context.SaveChangesAsync();
+             }
+
+             return RedirectToAction("Index");
+         }*/
 
         [HttpGet]
         public async Task<IActionResult> Checkout()

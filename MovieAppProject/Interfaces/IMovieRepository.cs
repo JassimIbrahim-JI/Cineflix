@@ -22,7 +22,7 @@ namespace MovieAppProject.Interfaces
         Task AddReview(Review review);
         Task AddItemToWishlistAsync(string userId, int movieId);
         Task RemoveItemFromWishlistAsync(string userId, int movieId);
-        Task AddMovieToCartAsync(string userId, int movieId);
+        Task<bool> AddMovieToCartAsync(string userId, int movieId);
         Task RemoveFromCartAsync(string userId, int movieId);
         Task<Cart> GetCartItemAsync(string userId, int movieId);
         Task<IEnumerable<Cart>> GetCartItemsAsync(string userId);

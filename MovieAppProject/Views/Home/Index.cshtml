@@ -1,6 +1,7 @@
 ﻿@model MovieAppProject.Helpers.PaginatedList<Movie>
 @{
     ViewData["Title"] = "Premium Movie Streaming";
+    var moviesInCart = ViewData["MoviesInCart"] as List<int> ?? new List<int>();
 }
 
 <!-- Hero Section -->
@@ -93,6 +94,9 @@
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mb-5">
         @foreach (var item in Model)
         {
+            
+            var isInCart = moviesInCart.Contains(item.Id);
+
             <div class="col">
                 <div class="card h-100 movie-card">
                     <div class="card-image-container">
@@ -106,9 +110,18 @@
                             <div class="overlay-content">
                                 @if (User.Identity.IsAuthenticated)
                                 {
+                                    if (isInCart)
+                                    {
+                                          <button disabled class="btn btn-success btn-sm">
+                                        <i class="bi bi-check-circle-fill"></i> In Cart
+                                         </button>
+                                    }
+                                    else
+                                    {                           
                                     <button type="button" data-action="add-to-cart" data-movie-id="@item.Id" class="btn btn-primary btn-sm">
                                         <i class="bi bi-cart-plus"></i> Add to Cart
-                                    </button>
+                                     </button>
+                                    }
                                 }
                                 else
                                 {
